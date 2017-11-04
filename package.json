@@ -4,7 +4,7 @@
   "description": "working prototype for auto installs in lambda deploys",
   "main": "index.js",
   "bin": {
-    "arc-deploy": "cli.js"
+    "arc-prototype-deploy": "cli.js"
   },
   "scripts": {
     "test": "node test | tap-spec"
