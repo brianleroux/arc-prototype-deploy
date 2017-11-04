@@ -1,8 +1,8 @@
 var arc = require('@architect/functions')
+var hi = require('@architect/shared/hi')
 
 function route(req, res) {
-  console.log(JSON.stringify(req, null, 2))
-  res({html:`hello world`})
+  res({html:hi()})
 }
 
 exports.handler = arc.html.get(route)

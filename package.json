@@ -22,6 +22,7 @@
     "@smallwins/validate": "^4.3.0",
     "chalk": "^2.1.0",
     "cipm": "^0.7.2",
+    "cpr": "^3.0.1",
     "glob": "^7.1.2",
     "run-parallel": "^1.1.6",
     "run-waterfall": "^1.1.3",
