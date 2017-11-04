@@ -21,3 +21,8 @@ Add the following to `scripts` in `package.json`
   "deploy": "AWS_REGION=xxx AWS_PROFILE=xxx arc-prototype-deploy"
 }
 ```
+
+
+### plugins research
+
+ok this code is rough; currently there is a 'plugin' in the root of this dir named `_any-name-works`. copy that into `./node_modules/any-name-works` and look at `mock/.arc` to see registration step. for usage, this version of deploy does the rest. (see index.js named function `_plugins` for logic)

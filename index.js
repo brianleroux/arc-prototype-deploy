@@ -20,7 +20,8 @@ module.exports = function deploy(params, callback) {
   })
 
   var {env, pathToArc, pathToCode} = params
-  var appName = parse(fs.readFileSync(pathToArc).toString()).app[0]
+  var arc = parse(fs.readFileSync(pathToArc).toString())
+  var appName = arc.app[0]
   var pathToPkg = path.join(pathToCode, 'package.json') // FIXME need to check for package-lock.json now too
 
   var pkgExists = fs.existsSync(pathToPkg) // FIXME perf (lets do this async)
@@ -33,6 +34,41 @@ module.exports = function deploy(params, callback) {
     var FunctionName = `${appName}-${env}${packageName.replace(appName, '')}`
 
     waterfall([
+
+      function _plugins(callback) {
+        // reads @plugins 
+        if (!arc.plugins) {
+          callback()
+        }
+        else {
+          // get the list of plugins
+          var fns = arc.plugins.map(pluginName=> {
+            try {
+              var tmp = require(pluginName)
+              var has = tmp.hasOwnProperty('beforeDeploy') 
+              var valid = typeof tmp.beforeDeploy === 'function'
+              if (has && valid) {
+                return tmp.beforeDeploy
+              }
+              else if (has && !valid) {
+                throw TypeError(pluginName + '.beforeDeploy not a function')
+              }
+              else {
+                return false
+              }
+            }
+            catch(e) {
+              throw ReferenceError('missing plugin ' + pluginName + ' not found')
+            }
+          }).filter(Boolean).map(fn=> fn({arc, pathToCode, env}))
+          // invoke them all concurrently (could be a problem! we probably want sequentially?)
+          Promise.all(fns).then(function() {
+            callback()
+          }).catch(function(err) {
+            throw err
+          })
+        }
+      },
       
       // auto install everything in package-lock.json using cipm
       function _modules(callback) {
@@ -49,7 +85,7 @@ module.exports = function deploy(params, callback) {
         var exists = fs.existsSync(src) // FIXME perf
         if (exists) {
           var dest = path.join(process.cwd(), pathToCode, 'node_modules', '@architect', 'shared')
-          var noop = err=> (console.log(err), callback())
+          var noop = err=> (callback())
           cpr(src, dest, {deleteFirst: true}, noop)  
         }
         else {
