@@ -3,6 +3,9 @@ var pad = require('lodash.padend')
 var _getName = require('./_get-function-name')
 var _getUrl = require('./_get-url')
 
+/**
+ * generates the completion report
+ */
 module.exports = function done(params, bar) {
   var {results, pathToCode, env, arc} = params
   var h1 = `Success!`

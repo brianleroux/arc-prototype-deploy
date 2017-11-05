@@ -1,5 +1,8 @@
 var Progress = require('progress')
 
+/**
+ * its a progress bar
+ */
 module.exports = function _progress(params, callback) {
   if (!callback) callback = x=> !x
   return new Progress(`${params.name} :bar `, {

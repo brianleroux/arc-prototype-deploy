@@ -8,6 +8,7 @@ var parse = require('@architect/parser')
 var deploy = require('.')
 var _progress = require('./src/_progress')
 var _report = require('./src/_report')
+var steps = 7 // magic number of steps in src
 
 var pathToArc = path.join(process.cwd(), '.arc')
 
@@ -31,7 +32,6 @@ if (isMany) {
     }
     else {
       var done = _report.bind({}, {results, pathToCode, env, arc})
-      var steps = 6
       var total = results.length * steps
       var progress = _progress({name: chalk.green.dim(`Deploying ${results.length} lambdas`), total}, done)
       var tick = x=> progress.tick()
@@ -51,7 +51,6 @@ if (isMany) {
 else {
   var pathToCode = process.argv[2]
   var noop = x=>!x
-  var steps = 6
   var total = steps
   var done = _report.bind({}, {results:[pathToCode], pathToCode, env, arc})
   var progress = _progress({name: chalk.green.dim(`Deploying ${pathToCode}`), total}, done)

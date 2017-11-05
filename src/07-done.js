@@ -1,6 +1,9 @@
 var chalk = require('chalk')
 var path = require('path')
 
+/**
+ * reports any errors otherwise silently continue
+ */
 module.exports = function _done(params, err) {
   if (params.tick) params.tick()
   let {pathToCode, callback, lambda} = params
@@ -15,9 +18,6 @@ module.exports = function _done(params, err) {
   else if (err) {
     console.log(`\n${chalk.dim('deploy')} ${chalk.red.bold(lambda)} ${chalk.dim('failed')}`)
     console.log(chalk.dim(err))
-  }
-  else {
-    // console.log(`${chalk.dim('deploy')} ${chalk.green.bold(lambda)} ${chalk.dim('success')}`)
   }
   callback()
 }

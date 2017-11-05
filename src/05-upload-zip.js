@@ -4,6 +4,9 @@ var zipit = require('zipit')
 var glob = require('glob')
 var aws = require('aws-sdk')
 
+/**
+ * zips and uploads the function to aws
+ */
 module.exports = function uploadZip(params, callback) {
   let {pathToCode, lambda} = params
   series([

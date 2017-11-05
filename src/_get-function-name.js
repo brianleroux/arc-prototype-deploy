@@ -1,12 +1,19 @@
 var fs = require('fs')
 var path = require('path')
 
+/**
+ * gets the lambda name for the given source function
+ *
+ * convention:
+ * appname-env-lambdaname
+ */
 module.exports = function getFunctionName(params, callback) {
-  let arc = params.arc 
-  let env = params.env
-  let appName = arc.app[0]
-  let pathToCode = params.pathToCode
+
+  let {arc, env, pathToCode} = params
+  let app = arc.app[0]
   let pathToPkg = path.join(pathToCode, 'package.json')
-  let packageName = JSON.parse(fs.readFileSync(`./${pathToPkg}`).toString()).name 
-  return `${appName}-${env}${packageName.replace(appName, '')}`
+  let name = require(path.resolve(pathToPkg)).name
+  let lambda = name.replace(app, '')
+
+  return `${app}-${env}${lambda}`
 }

@@ -2,6 +2,9 @@ var assert = require('@smallwins/validate/assert')
 var aws = require('aws-sdk')
 var gateway = new aws.APIGateway
 
+/**
+ * returns the current deploy url
+ */
 module.exports = function _getUrl(params, callback) {
   assert(params, {
     env: String,

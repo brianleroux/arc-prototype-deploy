@@ -1,6 +1,9 @@
 var path = require('path')
 var Installer = require('cipm')
 
+/**
+ * cipm install modules using package-lock.json
+ */
 module.exports = function _modules(params, callback) {
   let {pathToCode} = params
   let lock = path.join(process.cwd(), pathToCode)

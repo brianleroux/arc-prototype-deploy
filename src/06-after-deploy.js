@@ -13,13 +13,13 @@ module.exports = function _plugins(params, callback) {
     var fns = arc.plugins.map(pluginName=> {
       try {
         var tmp = require(pluginName)
-        var has = tmp.hasOwnProperty('beforeDeploy') 
-        var valid = typeof tmp.beforeDeploy === 'function'
+        var has = tmp.hasOwnProperty('afterDeploy') 
+        var valid = typeof tmp.afterDeploy === 'function'
         if (has && valid) {
-          return tmp.beforeDeploy
+          return tmp.afterDeploy
         }
         else if (has && !valid) {
-          throw TypeError(pluginName + '.beforeDeploy not a function')
+          throw TypeError(pluginName + '.afterDeploy not a function')
         }
         else {
           return false

@@ -10,7 +10,8 @@ var beforeDeploy = require('./01-before-deploy')
 var installModules = require('./02-install-modules')
 var copyShared = require('./03-copy-shared')
 var uploadZip = require('./05-upload-zip')
-var done = require('./06-done')
+var afterDeploy = require('./06-after-deploy')
+var done = require('./07-done')
 
 module.exports = function deploy(params, callback) {
 
@@ -33,19 +34,21 @@ module.exports = function deploy(params, callback) {
 
   // binds local state above to the functions below 
   const _validate = validate.bind({}, {pathToCode, tick})
-  const _plugins = beforeDeploy.bind({}, {env, pathToCode, arc, tick})
+  const _before = beforeDeploy.bind({}, {env, pathToCode, arc, tick})
   const _modules = installModules.bind({}, {pathToCode, tick})
   const _shared = copyShared.bind({}, {pathToCode, tick})
   const _upload = uploadZip.bind({}, {pathToCode, lambda, tick})
-  const _done = done.bind({}, {pathToCode, lambda, callback, tick})
+  const _after = afterDeploy.bind({}, {env, pathToCode, arc, tick})
+  const _done = done.bind({}, {arc, env, pathToCode, lambda, callback, tick})
 
   // executes the functions above 
   // in series sharing no state between them
   waterfall([
     _validate, 
-    _plugins, 
+    _before, 
     _modules, 
     _shared, 
-    _upload
+    _upload,
+    _after,
   ], _done)
 }
