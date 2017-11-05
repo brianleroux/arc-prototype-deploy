@@ -2,7 +2,7 @@
   "name": "arc-prototype-deploy",
   "version": "1.1.1",
   "description": "working prototype for auto installs in lambda deploys",
-  "main": "index.js",
+  "main": "src/index",
   "bin": {
     "arc-prototype-deploy": "cli.js"
   },
