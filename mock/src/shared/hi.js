@@ -1,1 +1,1 @@
-module.exports = function () {return 'hi!!!'}
+module.exports = function () {return 'hi!!'}

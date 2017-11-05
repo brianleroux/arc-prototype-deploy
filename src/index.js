@@ -5,13 +5,12 @@ var waterfall = require('run-waterfall')
 
 // local deps
 var _getName = require('./_get-function-name')
-var validate = require('./_validate')
-var beforeDeploy = require('./00-before-deploy')
-var installModules = require('./01-install-modules')
-var copyShared = require('./02-copy-shared')
-var uploadZip = require('./04-upload-zip')
-var done = require('./_done')
-var progress = require('./_progress')
+var validate = require('./00-validate')
+var beforeDeploy = require('./01-before-deploy')
+var installModules = require('./02-install-modules')
+var copyShared = require('./03-copy-shared')
+var uploadZip = require('./05-upload-zip')
+var done = require('./06-done')
 
 module.exports = function deploy(params, callback) {
 
@@ -25,17 +24,11 @@ module.exports = function deploy(params, callback) {
 
   // local state
   // - env; one of staging or production
-  // - pathToArc; absolute path to the .arc file currently executing
-  // - pathToCode; absolute path to the lambda function being deployed
   // - arc; the parsed .arc file contents
+  // - pathToCode; absolute path to the lambda function being deployed
+  // - tick; function to notify progress
   // - lambda; the name of the lambda being deployed
-  // - progressBar; the progress bar
-  let {
-    env, 
-    arc,
-    pathToCode,
-    tick,
-  } = params
+  let {env, arc, pathToCode, tick} = params
   let lambda = _getName({env, pathToCode, arc})
 
   // binds local state above to the functions below 

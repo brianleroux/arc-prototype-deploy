@@ -7,7 +7,7 @@ var parallel = require('run-parallel')
 var parse = require('@architect/parser')
 var deploy = require('.')
 var _progress = require('./src/_progress')
-var _getUrl = require('./src/_get-url')
+var _report = require('./src/_report')
 
 var pathToArc = path.join(process.cwd(), '.arc')
 
@@ -30,26 +30,7 @@ if (isMany) {
       process.exit(1)
     }
     else {
-      function done(bar) {
-        console.log(chalk.cyan.dim(`Successfully deployed ${results.length} lambdas`))
-        var isHTTP = results.find(r=> r.includes('src/html') || r.includes('src/json'))
-        if (isHTTP) {
-          _getUrl({
-            env,
-            arc,
-          }, 
-          function _gotUrl(err, url) {
-            if (err) {
-              console.log(err)
-            }
-            else {
-              var pretty = chalk.cyan.underline(url)
-              console.log(pretty)
-              console.log('\n')
-            }
-          })
-        }
-      }
+      var done = _report.bind({}, {results, pathToCode, env, arc})
       var steps = 6
       var total = results.length * steps
       var progress = _progress({name: chalk.green.dim(`Deploying ${results.length} lambdas`), total}, done)
@@ -72,7 +53,7 @@ else {
   var noop = x=>!x
   var steps = 6
   var total = steps
-  var done = x=> console.log(chalk.cyan.dim(`Successfully deployed `) + chalk.cyan(pathToCode) + '\n')
+  var done = _report.bind({}, {results:[pathToCode], pathToCode, env, arc})
   var progress = _progress({name: chalk.green.dim(`Deploying ${pathToCode}`), total}, done)
   var tick = x=> progress.tick()
   deploy({

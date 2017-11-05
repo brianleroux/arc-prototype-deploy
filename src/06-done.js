@@ -7,13 +7,13 @@ module.exports = function _done(params, err) {
   let pathToPkg = path.join(pathToCode, 'package.json')
   let pathToLock = path.join(pathToCode, 'package-lock.json') 
   if (err && err.message === 'cancel_missing_package') {
-    console.log(chalk.yellow.dim('skip ' + pathToPkg + ' not found'))
+    console.log(chalk.yellow.dim('\nskip ' + pathToPkg + ' not found'))
   }
   else if (err && err.message === 'cancel_missing_lock') {
-    console.log(chalk.yellow.dim('skip ' + pathToLock + ' not found'))
+    console.log(chalk.yellow.dim('\nskip ' + pathToLock + ' not found'))
   }
   else if (err) {
-    console.log(`${chalk.dim('deploy')} ${chalk.red.bold(lambda)} ${chalk.dim('failed')}`)
+    console.log(`\n${chalk.dim('deploy')} ${chalk.red.bold(lambda)} ${chalk.dim('failed')}`)
     console.log(chalk.dim(err))
   }
   else {
