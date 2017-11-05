@@ -31,8 +31,7 @@ if (isMany) {
     }
     else {
       function done(bar) {
-        console.log('\n')
-        console.log(chalk.cyan.dim(`successfully deployed ${results.length} lambdas`))
+        console.log(chalk.cyan.dim(`Successfully deployed ${results.length} lambdas`))
         var isHTTP = results.find(r=> r.includes('src/html') || r.includes('src/json'))
         if (isHTTP) {
           _getUrl({
@@ -53,7 +52,7 @@ if (isMany) {
       }
       var steps = 6
       var total = results.length * steps
-      var progress = _progress({name: `deploying ${results.length} lambdas`, total}, done)
+      var progress = _progress({name: chalk.green.dim(`Deploying ${results.length} lambdas`), total}, done)
       var tick = x=> progress.tick()
       parallel(results.map(pathToCode=> {
         return function _deploy(callback) {
@@ -73,8 +72,8 @@ else {
   var noop = x=>!x
   var steps = 6
   var total = steps
-  var done = x=> console.log(chalk.dim(`successfully deployed `) + chalk.green(pathToCode))
-  var progress = _progress({name: chalk.dim(`deploying ${pathToCode}`), total}, done)
+  var done = x=> console.log(chalk.cyan.dim(`Successfully deployed `) + chalk.cyan(pathToCode) + '\n')
+  var progress = _progress({name: chalk.green.dim(`Deploying ${pathToCode}`), total}, done)
   var tick = x=> progress.tick()
   deploy({
     env,
