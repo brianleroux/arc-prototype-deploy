@@ -1,6 +1,5 @@
 // deps
 var fs = require('fs')
-var parse = require('@architect/parser')
 var assert = require('@smallwins/validate/assert')
 var waterfall = require('run-waterfall')
 
@@ -12,14 +11,16 @@ var installModules = require('./01-install-modules')
 var copyShared = require('./02-copy-shared')
 var uploadZip = require('./04-upload-zip')
 var done = require('./_done')
+var progress = require('./_progress')
 
 module.exports = function deploy(params, callback) {
 
   // module contract
   assert(params, {
     env: String,
-    pathToArc: String,
+    arc: Object,
     pathToCode: String,
+    tick: Function,
   })
 
   // local state
@@ -28,21 +29,22 @@ module.exports = function deploy(params, callback) {
   // - pathToCode; absolute path to the lambda function being deployed
   // - arc; the parsed .arc file contents
   // - lambda; the name of the lambda being deployed
+  // - progressBar; the progress bar
   let {
     env, 
-    pathToArc, 
-    pathToCode
+    arc,
+    pathToCode,
+    tick,
   } = params
-  let arc = parse(fs.readFileSync(pathToArc).toString())
   let lambda = _getName({env, pathToCode, arc})
 
   // binds local state above to the functions below 
-  const _validate = validate.bind({}, {pathToCode})
-  const _plugins = beforeDeploy.bind({}, {env, pathToCode, arc})
-  const _modules = installModules.bind({}, {pathToCode})
-  const _shared = copyShared.bind({}, {pathToCode})
-  const _upload = uploadZip.bind({}, {pathToCode, lambda})
-  const _done = done.bind({}, {pathToCode, lambda, callback})
+  const _validate = validate.bind({}, {pathToCode, tick})
+  const _plugins = beforeDeploy.bind({}, {env, pathToCode, arc, tick})
+  const _modules = installModules.bind({}, {pathToCode, tick})
+  const _shared = copyShared.bind({}, {pathToCode, tick})
+  const _upload = uploadZip.bind({}, {pathToCode, lambda, tick})
+  const _done = done.bind({}, {pathToCode, lambda, callback, tick})
 
   // executes the functions above 
   // in series sharing no state between them

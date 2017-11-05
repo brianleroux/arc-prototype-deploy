@@ -4,7 +4,10 @@ var path = require('path')
 var glob = require('glob')
 var chalk = require('chalk')
 var parallel = require('run-parallel')
+var parse = require('@architect/parser')
 var deploy = require('.')
+var _progress = require('./src/_progress')
+var _getUrl = require('./src/_get-url')
 
 var pathToArc = path.join(process.cwd(), '.arc')
 
@@ -15,6 +18,7 @@ if (!fs.existsSync(pathToArc)) {
 
 // deploy to staging by default
 var env = (process.env.ARC_DEPLOY === 'production')? 'production' : 'staging'
+let arc = parse(fs.readFileSync(pathToArc).toString())
 
 // deploy everything in ./src by default
 var isMany = process.argv.length === 2
@@ -26,12 +30,38 @@ if (isMany) {
       process.exit(1)
     }
     else {
+      function done(bar) {
+        console.log('\n')
+        console.log(chalk.cyan.dim(`successfully deployed ${results.length} lambdas`))
+        var isHTTP = results.find(r=> r.includes('src/html') || r.includes('src/json'))
+        if (isHTTP) {
+          _getUrl({
+            env,
+            arc,
+          }, 
+          function _gotUrl(err, url) {
+            if (err) {
+              console.log(err)
+            }
+            else {
+              var pretty = chalk.cyan.underline(url)
+              console.log(pretty)
+              console.log('\n')
+            }
+          })
+        }
+      }
+      var steps = 6
+      var total = results.length * steps
+      var progress = _progress({name: `deploying ${results.length} lambdas`, total}, done)
+      var tick = x=> progress.tick()
       parallel(results.map(pathToCode=> {
         return function _deploy(callback) {
           deploy({
             env,
-            pathToArc,
+            arc,
             pathToCode,
+            tick,
           }, callback)
         }
       }))
@@ -41,9 +71,15 @@ if (isMany) {
 else {
   var pathToCode = process.argv[2]
   var noop = x=>!x
+  var steps = 6
+  var total = steps
+  var done = x=> console.log(chalk.dim(`successfully deployed `) + chalk.green(pathToCode))
+  var progress = _progress({name: chalk.dim(`deploying ${pathToCode}`), total}, done)
+  var tick = x=> progress.tick()
   deploy({
     env,
-    pathToArc,
+    arc,
     pathToCode,
+    tick
   }, noop)
 }

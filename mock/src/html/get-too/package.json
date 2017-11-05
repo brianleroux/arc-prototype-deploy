@@ -1,0 +1,6 @@
+{
+  "name": "testapp9-get-too",
+  "dependencies": {
+    "@architect/functions": "^1.6.2"
+  }
+}

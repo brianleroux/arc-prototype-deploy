@@ -9,10 +9,15 @@ module.exports = function _shared(params, callback) {
   var exists = fs.existsSync(src) // FIXME perf
   if (exists) {
     var dest = path.join(process.cwd(), pathToCode, 'node_modules', '@architect', 'shared')
-    var noop = err=> (callback())
+    function noop(err) { 
+      if (err) console.log(err)
+      if (params.tick) params.tick()
+      callback()
+    }
     cpr(src, dest, {deleteFirst: true}, noop)  
   }
   else {
+    if (params.tick) params.tick()
     callback() // quietly continue if ./shared doesn't exist
   }
 }

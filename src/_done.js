@@ -2,6 +2,7 @@ var chalk = require('chalk')
 var path = require('path')
 
 module.exports = function _done(params, err) {
+  if (params.tick) params.tick()
   let {pathToCode, callback, lambda} = params
   let pathToPkg = path.join(pathToCode, 'package.json')
   let pathToLock = path.join(pathToCode, 'package-lock.json') 
@@ -16,7 +17,7 @@ module.exports = function _done(params, err) {
     console.log(chalk.dim(err))
   }
   else {
-    console.log(`${chalk.dim('deploy')} ${chalk.green.bold(lambda)} ${chalk.dim('success')}`)
+    // console.log(`${chalk.dim('deploy')} ${chalk.green.bold(lambda)} ${chalk.dim('success')}`)
   }
   callback()
 }

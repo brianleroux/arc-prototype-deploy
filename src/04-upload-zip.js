@@ -2,7 +2,6 @@ var series = require('run-waterfall')
 var path = require('path')
 var zipit = require('zipit')
 var glob = require('glob')
-var chalk = require('chalk')
 var aws = require('aws-sdk')
 
 module.exports = function uploadZip(params, callback) {
@@ -19,11 +18,19 @@ module.exports = function uploadZip(params, callback) {
     },
     // upload the function
     function _upload(buffer, callback) {
-      console.log(`${chalk.dim('deploy')} ${chalk.yellow(lambda)} ${chalk.dim('start')}`)
       ;(new aws.Lambda).updateFunctionCode({
         FunctionName: lambda,
         ZipFile: buffer
-      }, callback)
+      },
+      function _updatedFun(err) {
+        if (err) {
+          callback(err)
+        }
+        else {
+          if (params.tick) params.tick()
+          callback()
+        }
+      })
     }
   ], callback)
 }

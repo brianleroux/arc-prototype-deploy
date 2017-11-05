@@ -14,6 +14,7 @@ module.exports = function _validate(params, callback) {
       callback(Error('cancel_missing_lock'))
     }
     else {
+      if (params.tick) params.tick()
       callback()
     }
   }

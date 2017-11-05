@@ -2,6 +2,7 @@ module.exports = function _plugins(params, callback) {
   let {arc, pathToCode, env} = params
   // reads @plugins 
   if (!arc.plugins) {
+    if (params.tick) params.tick()
     callback()
   }
   else {
@@ -27,6 +28,7 @@ module.exports = function _plugins(params, callback) {
     }).filter(Boolean).map(fn=> fn({arc, pathToCode, env}))
     // invoke them all concurrently (could be a problem! we probably want sequentially?)
     Promise.all(fns).then(function() {
+      if (params.tick) params.tick()
       callback()
     }).catch(function(err) {
       throw err
