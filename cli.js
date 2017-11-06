@@ -32,9 +32,8 @@ if (isMany) {
       process.exit(1)
     }
     else {
-      var done = _report.bind({}, {results, pathToCode, env, arc, start})
       var total = results.length * steps
-      var progress = _progress({name: chalk.green.dim(`Deploying ${results.length} lambdas`), total}, done)
+      var progress = _progress({name: chalk.green.dim(`Deploying ${results.length} lambdas`), total})
       var tick = x=> progress.tick()
       parallel(results.map(pathToCode=> {
         return function _deploy(callback) {
@@ -45,7 +44,15 @@ if (isMany) {
             tick,
           }, callback)
         }
-      }))
+      }),
+      function _done(err, stats) {
+        if (err) {
+          console.log(err)
+        }
+        else {
+          _report({results, env, arc, start, stats})
+        }
+      })
     }
   })
 }

@@ -4,7 +4,7 @@ var path = require('path')
 /**
  * reports any errors otherwise silently continue
  */
-module.exports = function _done(params, err) {
+module.exports = function _done(params, err, stats) {
   if (params.tick) params.tick()
   let {pathToCode, callback, lambda} = params
   let pathToPkg = path.join(pathToCode, 'package.json')
@@ -17,7 +17,7 @@ module.exports = function _done(params, err) {
   }
   else if (err) {
     console.log(`\n${chalk.dim('deploy')} ${chalk.red.bold(lambda)} ${chalk.dim('failed')}`)
-    console.log(chalk.dim(err))
+    console.log(chalk.dim(JSON.stringify(err)))
   }
-  callback()
+  callback(null, stats)
 }

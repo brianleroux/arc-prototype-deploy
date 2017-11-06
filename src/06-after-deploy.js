@@ -1,12 +1,12 @@
 /**
  * calls any plugins registered in .arc with beforeDeploy
  */
-module.exports = function _plugins(params, callback) {
+module.exports = function _plugins(params, stats, callback) {
   let {arc, pathToCode, env} = params
   // reads @plugins 
   if (!arc.plugins) {
     if (params.tick) params.tick()
-    callback()
+    callback(null, stats)
   }
   else {
     // get the list of plugins
@@ -32,7 +32,7 @@ module.exports = function _plugins(params, callback) {
     // invoke them all concurrently (could be a problem! we probably want sequentially?)
     Promise.all(fns).then(function() {
       if (params.tick) params.tick()
-      callback()
+      callback(null, stats)
     }).catch(function(err) {
       throw err
     })
