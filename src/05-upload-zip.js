@@ -32,9 +32,9 @@ module.exports = function uploadZip(params, callback) {
         else {
           if (params.tick) params.tick()
           var lambdaBytes = Buffer.byteLength(buffer, 'utf8')
-          var oneMegInBytes = 125000
+          var oneMegInBytes = 1000000
           var lambdaMegs = (lambdaBytes/oneMegInBytes).toFixed(2)
-          var stats = {name: params.pathToCode, size: `${lambdaMegs}mb`}
+          var stats = {name: params.pathToCode, size: `${lambdaMegs} mb`}
           callback(null, stats)
         }
       })
