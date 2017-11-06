@@ -9,6 +9,7 @@ var deploy = require('.')
 var _progress = require('./src/_progress')
 var _report = require('./src/_report')
 var steps = 7 // magic number of steps in src
+var start = Date.now()
 
 var pathToArc = path.join(process.cwd(), '.arc')
 
@@ -31,7 +32,7 @@ if (isMany) {
       process.exit(1)
     }
     else {
-      var done = _report.bind({}, {results, pathToCode, env, arc})
+      var done = _report.bind({}, {results, pathToCode, env, arc, start})
       var total = results.length * steps
       var progress = _progress({name: chalk.green.dim(`Deploying ${results.length} lambdas`), total}, done)
       var tick = x=> progress.tick()
@@ -52,7 +53,7 @@ else {
   var pathToCode = process.argv[2]
   var noop = x=>!x
   var total = steps
-  var done = _report.bind({}, {results:[pathToCode], pathToCode, env, arc})
+  var done = _report.bind({}, {results:[pathToCode], pathToCode, env, arc, start})
   var progress = _progress({name: chalk.green.dim(`Deploying ${pathToCode}`), total}, done)
   var tick = x=> progress.tick()
   deploy({

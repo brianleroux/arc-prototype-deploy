@@ -7,13 +7,15 @@ var _getUrl = require('./_get-url')
  * generates the completion report
  */
 module.exports = function done(params, bar) {
-  var {results, pathToCode, env, arc} = params
+  var {results, pathToCode, env, arc, start} = params
+  var end = Date.now()
   var h1 = `Success!`
-  var h1a = ` Deployed ${results.length} Lambdas`
-  var title = chalk.green(h1) + chalk.green.dim(h1a)
+  var h1a = ` Deployed ${results.length} Lambdas in `
+  var h1b = `${(end - start)/1000}s`
+  var title = chalk.green(h1) + chalk.green.dim(h1a) + chalk.green(h1b)
   console.log(title)
   var hr = ''
-  for (var i = 0; i < (h1.length + h1a.length); i++) hr += '-'
+  for (var i = 0; i < (h1.length + h1a.length + h1b.length); i++) hr += '-'
   console.log(chalk.cyan.dim(hr))
   var longest = 0
   results.forEach(r=> {
@@ -21,7 +23,7 @@ module.exports = function done(params, bar) {
     if (cur > longest) longest = cur
   })
   results.forEach(srcPath=> {
-    var left = chalk.cyan.dim(pad(srcPath + ' ', longest + 3, '.'))
+    var left = chalk.cyan.dim(pad(srcPath + ' ', longest + 4, '.'))
     var right =  chalk.cyan(_getName({arc, env, pathToCode:srcPath}))
     console.log(left + ' ' + right)
   })
