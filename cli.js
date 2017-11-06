@@ -60,13 +60,21 @@ else {
   var pathToCode = process.argv[2]
   var noop = x=>!x
   var total = steps
-  var done = _report.bind({}, {results:[pathToCode], pathToCode, env, arc, start})
-  var progress = _progress({name: chalk.green.dim(`Deploying ${pathToCode}`), total}, done)
+  var progress = _progress({name: chalk.green.dim(`Deploying ${pathToCode}`), total})
   var tick = x=> progress.tick()
   deploy({
     env,
     arc,
     pathToCode,
     tick
-  }, noop)
+  },
+  function _done(err, stats) {
+  console.log(err, stats)
+    if (err) {
+      console.log(err)
+    }
+    else {
+      _report({results:[pathToCode], env, arc, start, stats:[stats]})
+    }
+  })
 }
