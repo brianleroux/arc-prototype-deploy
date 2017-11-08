@@ -33,7 +33,8 @@ module.exports = function _report(params) {
     var padd = ' '
     for (var i = 0; i < ((longestName - name.length) + 3); i++) padd += '.'
     padd += ' '
-    var size = stats.find(s=> s.name === srcPath).size
+    var stat = stats.find(s=> s.name === srcPath)
+    var size = stat? stat.size : '?'
     console.log(left + ' ' + right + chalk.cyan.dim(padd) + chalk.green(size))
   })
   var isHTTP = results.find(r=> r.includes('src/html') || r.includes('src/json'))
