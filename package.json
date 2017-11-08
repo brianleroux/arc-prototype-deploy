@@ -1,6 +1,6 @@
 {
   "name": "arc-prototype-deploy",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "working prototype for auto installs in lambda deploys",
   "main": "src/index",
   "bin": {
