@@ -1,4 +1,4 @@
-var fs = require('fs')
+/* eslint global-require:"off" */
 var path = require('path')
 
 /**
@@ -7,7 +7,7 @@ var path = require('path')
  * convention:
  * appname-env-lambdaname
  */
-module.exports = function getFunctionName(params, callback) {
+module.exports = function getFunctionName(params) {
 
   let {arc, env, pathToCode} = params
   let app = arc.app[0]

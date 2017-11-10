@@ -7,13 +7,16 @@
     "arc-prototype-deploy": "cli.js"
   },
   "scripts": {
-    "test": "node test | tap-spec"
+    "pretest": "npm run lint",
+    "test": "node test | tap-spec",
+    "lint": "eslint . --fix"
   },
   "keywords": [],
   "author": "Brian LeRoux <b@brian.io>",
   "license": "Apache-2.0",
   "devDependencies": {
     "aws-sdk": "^2.133.0",
+    "eslint": "^4.10.0",
     "tap-spec": "^4.1.1",
     "tape": "^4.8.0"
   },

@@ -1,9 +1,10 @@
+/* eslint global-require:"off" */
 /**
  * calls any plugins registered in .arc with beforeDeploy
  */
 module.exports = function _plugins(params, callback) {
   let {arc, pathToCode, env} = params
-  // reads @plugins 
+  // reads @plugins
   if (!arc.plugins) {
     if (params.tick) params.tick()
     callback()
@@ -13,7 +14,7 @@ module.exports = function _plugins(params, callback) {
     var fns = arc.plugins.map(pluginName=> {
       try {
         var tmp = require(pluginName)
-        var has = tmp.hasOwnProperty('beforeDeploy') 
+        var has = tmp.hasOwnProperty('beforeDeploy')
         var valid = typeof tmp.beforeDeploy === 'function'
         if (has && valid) {
           return tmp.beforeDeploy

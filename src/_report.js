@@ -42,7 +42,7 @@ module.exports = function _report(params) {
     _getUrl({
       env,
       arc,
-    }, 
+    },
     function _gotUrl(err, url) {
       if (err) {
         console.log(err)

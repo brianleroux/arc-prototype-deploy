@@ -34,7 +34,7 @@ if (isMany) {
     else {
       var total = results.length * steps
       var progress = _progress({name: chalk.green.dim(`Deploying ${results.length} lambdas`), total})
-      var tick = x=> progress.tick()
+      var tick = ()=> progress.tick() // closure needed
       parallel(results.map(pathToCode=> {
         return function _deploy(callback) {
           deploy({
@@ -58,10 +58,9 @@ if (isMany) {
 }
 else {
   var pathToCode = process.argv[2]
-  var noop = x=>!x
   var total = steps
   var progress = _progress({name: chalk.green.dim(`Deploying ${pathToCode}`), total})
-  var tick = x=> progress.tick()
+  var tick = ()=> progress.tick()
   deploy({
     env,
     arc,

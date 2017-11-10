@@ -1,3 +1,4 @@
+var chalk = require('chalk')
 var path = require('path')
 var Installer = require('cipm')
 
@@ -8,10 +9,10 @@ module.exports = function _modules(params, callback) {
   let {pathToCode} = params
   let lock = path.join(process.cwd(), pathToCode)
   let installer = new Installer({prefix: lock})
-  installer.run().then(function(deets) {
+  installer.run().then(function _success() {
     if (params.tick) params.tick()
-    callback() 
-  }).catch(function fail(err) {
+    callback()
+  }).catch(function _fail(err) {
     // log any cipm failures but continue anyhow
     console.log(chalk.red(err))
     callback()

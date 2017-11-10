@@ -1,5 +1,4 @@
 // deps
-var fs = require('fs')
 var assert = require('@smallwins/validate/assert')
 var waterfall = require('run-waterfall')
 
@@ -32,7 +31,7 @@ module.exports = function deploy(params, callback) {
   let {env, arc, pathToCode, tick} = params
   let lambda = _getName({env, pathToCode, arc})
 
-  // binds local state above to the functions below 
+  // binds local state above to the functions below
   const _validate = validate.bind({}, {pathToCode, tick})
   const _before = beforeDeploy.bind({}, {env, pathToCode, arc, tick})
   const _modules = installModules.bind({}, {pathToCode, tick})
@@ -41,13 +40,13 @@ module.exports = function deploy(params, callback) {
   const _after = afterDeploy.bind({}, {env, pathToCode, arc, tick})
   const _done = done.bind({}, {arc, env, pathToCode, lambda, callback, tick})
 
-  // executes the functions above 
+  // executes the functions above
   // in series sharing no state between them
   waterfall([
-    _validate, 
-    _before, 
-    _modules, 
-    _shared, 
+    _validate,
+    _before,
+    _modules,
+    _shared,
     _upload,
     _after,
   ], _done)

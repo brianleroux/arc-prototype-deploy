@@ -8,7 +8,7 @@ module.exports = function _done(params, err, stats) {
   if (params.tick) params.tick()
   let {pathToCode, callback, lambda} = params
   let pathToPkg = path.join(pathToCode, 'package.json')
-  let pathToLock = path.join(pathToCode, 'package-lock.json') 
+  let pathToLock = path.join(pathToCode, 'package-lock.json')
   if (err && err.message === 'cancel_missing_package') {
     console.log(chalk.yellow.dim('\nskip ' + pathToPkg + ' not found'))
   }
