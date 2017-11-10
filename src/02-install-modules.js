@@ -11,5 +11,9 @@ module.exports = function _modules(params, callback) {
   installer.run().then(function(deets) {
     if (params.tick) params.tick()
     callback() 
-  }).catch(callback)
+  }).catch(function fail(err) {
+    // log any cipm failures but continue anyhow
+    console.log(chalk.red(err))
+    callback()
+  })
 }
