@@ -69,7 +69,6 @@ else {
     tick
   },
   function _done(err, stats) {
-  console.log(err, stats)
     if (err) {
       console.log(err)
     }
