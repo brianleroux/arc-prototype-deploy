@@ -16,7 +16,14 @@ module.exports = function _shared(params, callback) {
       if (params.tick) params.tick()
       callback()
     }
-    cpr(src, dest, {deleteFirst: true}, noop)
+    cpr(src, dest, {deleteFirst: true}, function _done(err) {
+      if (err) noop(err)
+      else {
+        var arcFileSrc = path.join(process.cwd(), '.arc')
+        var arcFileDest = path.join(process.cwd(), pathToCode, 'node_modules', '@architect', 'shared', '.arc')
+        cpr(arcFileSrc, arcFileDest, {deleteFirst: true}, noop)
+      }
+    })
   }
   else {
     if (params.tick) params.tick()

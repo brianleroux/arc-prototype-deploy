@@ -14,6 +14,7 @@ module.exports = function _modules(params, callback) {
     callback()
   }).catch(function _fail(err) {
     // log any cipm failures but continue anyhow
+    console.log(chalk.red(pathToCode))
     console.log(chalk.red(err))
     callback()
   })
