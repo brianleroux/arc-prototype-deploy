@@ -34,8 +34,6 @@ module.exports = function _plugins(params, stats, callback) {
     Promise.all(fns).then(function() {
       if (params.tick) params.tick()
       callback(null, stats)
-    }).catch(function(err) {
-      throw err
-    })
+    }).catch(callback)
   }
 }
