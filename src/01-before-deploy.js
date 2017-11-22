@@ -27,7 +27,10 @@ module.exports = function _plugins(params, callback) {
         }
       }
       catch(e) {
-        throw ReferenceError('missing plugin ' + pluginName + ' not found')
+        if (e.code === 'MODULE_NOT_FOUND') {
+          throw ReferenceError('Arc plugin "' + pluginName + '" not found')
+        }
+        throw e
       }
     }).filter(Boolean).map(fn=> fn({arc, pathToCode, env}))
     // invoke them all concurrently (could be a problem! we probably want sequentially?)
