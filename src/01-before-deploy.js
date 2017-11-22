@@ -11,13 +11,22 @@ module.exports = function _plugins(params, callback) {
   }
   else {
     // get the list of plugins
-    var fns = arc.plugins.map(pluginName=> {
+    var fns = arc.plugins.map(plugin=> {
       try {
+        var pluginName
+        var pluginConfig
+        if (typeof plugin === 'object') {
+          pluginName = Object.keys(plugin)[0]
+          pluginConfig = plugin[pluginName]
+        } else {
+          pluginName = plugin
+        }
+
         var tmp = require(pluginName)
         var has = tmp.hasOwnProperty('beforeDeploy')
         var valid = typeof tmp.beforeDeploy === 'function'
         if (has && valid) {
-          return tmp.beforeDeploy
+          return { fn: tmp.beforeDeploy, pluginConfig }
         }
         else if (has && !valid) {
           throw TypeError(pluginName + '.beforeDeploy not a function')
@@ -32,7 +41,7 @@ module.exports = function _plugins(params, callback) {
         }
         throw e
       }
-    }).filter(Boolean).map(fn=> fn({arc, pathToCode, env}))
+    }).filter(Boolean).map(plugin=> plugin.fn({arc, pathToCode, env, pluginConfig: plugin.pluginConfig}))
     // invoke them all concurrently (could be a problem! we probably want sequentially?)
     Promise.all(fns).then(function() {
       if (params.tick) params.tick()
